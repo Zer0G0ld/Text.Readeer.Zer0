@@ -18,6 +18,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         const selectedVoice = voices.find(voice => voice.name === items.voice);
                         if (selectedVoice) {
                             utterance.voice = selectedVoice;
+                        } else {
+                            console.warn('Voz selecionada não encontrada, usando voz padrão.');
                         }
                         speechSynthesis.speak(utterance);
                         console.log("Começando a falar com as configurações selecionadas.");
@@ -36,17 +38,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         speechSynthesis.cancel();
         console.log("Fala interrompida.");
     }
+
+    // Para garantir que sempre há uma resposta, mesmo que não seja necessário
+    sendResponse({ status: "success" });
 });
 
 function loadVoicesAsync() {
     return new Promise((resolve, reject) => {
         let voices = speechSynthesis.getVoices();
-        if (voices.length !== 0) {
+        if (voices.length > 0) {
             resolve(voices);
         } else {
             speechSynthesis.onvoiceschanged = () => {
                 voices = speechSynthesis.getVoices();
-                if (voices.length !== 0) {
+                if (voices.length > 0) {
                     resolve(voices);
                 } else {
                     reject('Nenhuma voz disponível.');

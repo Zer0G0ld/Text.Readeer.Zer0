@@ -1,4 +1,19 @@
-/* Estilização geral */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    input[type="range"] {
+        width: 100%;
+    }
+}
+
+/* Tema claro (padrão) */
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
@@ -10,6 +25,46 @@ body {
     max-width: 800px;
     margin: auto;
 }
+
+
+/* Tema Claro (light) */
+body.light {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Tema Escuro (dark) */
+body.dark {
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+.container.light {
+    background-color: #fff;
+}
+
+.container.dark {
+    background-color: #444;
+}
+
+button.light {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button.dark {
+    background-color: #666;
+    color: white;
+}
+
+button.light:hover {
+    background-color: #45a049;
+}
+
+button.dark:hover {
+    background-color: #555;
+}
+
 
 /* Título */
 h1 {
