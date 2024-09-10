@@ -1,5 +1,11 @@
 let cachedSettings = {};
 
+// Função para atualizar os valores exibidos
+function updateDisplayValues() {
+    document.getElementById('rate-value').textContent = document.getElementById('rate-slider').value;
+    document.getElementById('volume-value').textContent = document.getElementById('volume-slider').value;
+}
+
 // Carregar configurações no início e armazenar em cache
 document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.sync.get(['lang', 'rate', 'volume', 'voice', 'theme'], (items) => {
@@ -10,8 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('voice-select').value = items.voice || '';
         document.getElementById('theme-select').value = items.theme || 'light';
 
-        document.getElementById('rate-value').textContent = items.rate || 1;
-        document.getElementById('volume-value').textContent = items.volume || 1;
+        updateDisplayValues();
     });
 
     // Carregar vozes dinamicamente
@@ -39,9 +44,15 @@ document.addEventListener('DOMContentLoaded', () => {
 document.querySelectorAll('input, select').forEach((element) => {
     element.addEventListener('change', (e) => {
         cachedSettings[e.target.id.split('-')[0]] = e.target.value;
-        chrome.storage.sync.set(cachedSettings);
+        chrome.storage.sync.set(cachedSettings, () => {
+            console.log('Configurações salvas:', cachedSettings);
+        });
     });
 });
+
+// Atualizar os valores exibidos quando os sliders forem ajustados
+document.getElementById('rate-slider').addEventListener('input', updateDisplayValues);
+document.getElementById('volume-slider').addEventListener('input', updateDisplayValues);
 
 // Carregar vozes de forma assíncrona
 function loadVoicesAsync() {
@@ -66,6 +77,7 @@ function loadVoicesAsync() {
 // Resetar as configurações para os padrões
 document.getElementById('reset-button').addEventListener('click', () => {
     chrome.storage.sync.clear(() => {
+        console.log('Configurações resetadas');
         location.reload();
     });
 });

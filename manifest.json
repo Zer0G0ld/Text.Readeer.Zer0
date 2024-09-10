@@ -3,7 +3,7 @@
     "name": "Text Reader Zer0",
     "version": "1.0",
     "description": "Lê o texto selecionado",
-    "permissions": ["activeTab", "tabs", "storage"],
+    "permissions": ["activeTab", "tabs", "storage", "contextMenus"],
     "background": {
         "service_worker": "background.js"
     },

@@ -1,29 +1,32 @@
 console.log("Content Script está rodando.");
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log('Mensagem recebida no content script:', message);
     if (message.action === "read") {
         let selectedText = window.getSelection().toString();
+        console.log('Texto selecionado:', selectedText);
         if (selectedText) {
             chrome.storage.sync.get(['lang', 'rate', 'volume', 'voice'], (items) => {
+                console.log('Configurações recuperadas:', items);
                 const utterance = new SpeechSynthesisUtterance(selectedText);
-                utterance.lang = items.lang || 'pt-BR'; // Usar o idioma salvo nas configurações
-                utterance.rate = parseFloat(items.rate) || 1; // Usar a velocidade salva
-                utterance.volume = parseFloat(items.volume) || 1; // Usar o volume salvo
-                
+                utterance.lang = items.lang || 'pt-BR';
+                utterance.rate = parseFloat(items.rate) || 1;
+                utterance.volume = parseFloat(items.volume) || 1;
+
                 if (items.voice) {
                     loadVoicesAsync().then((voices) => {
                         const selectedVoice = voices.find(voice => voice.name === items.voice);
                         if (selectedVoice) {
-                            utterance.voice = selectedVoice; // Usar a voz selecionada nas configurações
+                            utterance.voice = selectedVoice;
                         }
                         speechSynthesis.speak(utterance);
                         console.log("Começando a falar com as configurações selecionadas.");
                     }).catch((error) => {
                         console.error('Erro ao carregar vozes:', error);
-                        speechSynthesis.speak(utterance); // Falar com voz padrão se houver erro
+                        speechSynthesis.speak(utterance);
                     });
                 } else {
-                    speechSynthesis.speak(utterance); // Falar com voz padrão se não houver voz selecionada
+                    speechSynthesis.speak(utterance);
                 }
             });
         } else {
@@ -35,14 +38,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-// Carregar vozes de forma assíncrona
 function loadVoicesAsync() {
     return new Promise((resolve, reject) => {
         let voices = speechSynthesis.getVoices();
         if (voices.length !== 0) {
             resolve(voices);
         } else {
-            // O evento de "voiceschanged" garante que as vozes sejam carregadas mesmo que estejam atrasadas
             speechSynthesis.onvoiceschanged = () => {
                 voices = speechSynthesis.getVoices();
                 if (voices.length !== 0) {
