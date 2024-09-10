@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="/icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/img/icon.png" type="image/x-icon">
     <title>Configurações</title>
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
     <div class="container">
         <h1>Configurações</h1>
-        <p>Aqui você pode ajustar as opções da extensão.</p>
+        <p>Ajuste as opções da extensão conforme sua preferência.</p>
         
-        <!-- Adicione os campos de configuração aqui -->
+        <!-- Seção de Idioma e Voz -->
         <section class="form-container">
             <h2>Idioma e Voz</h2>
             <label for="lang-select">Idioma:</label>
             <select id="lang-select">
-                <option value="pt-BR">Português (Brasil)</option>
-                <option value="en-US">Inglês (EUA)</option>
-                <option value="es-ES">Espanhol (Espanha)</option>
+                <option value="pt">Português (Brasil)</option>
+                <option value="en">Inglês (EUA)</option>
+                <option value="es">Espanhol (Espanha)</option>
                 <!-- Adicione outros idiomas conforme necessário -->
             </select>
             
@@ -29,6 +29,7 @@
             </select>
         </section>
         
+        <!-- Seção de Personalização de Fala -->
         <section class="form-container">
             <h2>Personalização de Fala</h2>
             <label for="rate-slider">Velocidade:</label>
@@ -40,6 +41,7 @@
             <span id="volume-value">1</span>
         </section>
         
+        <!-- Seção de Temas -->
         <section class="form-container">
             <h2>Temas</h2>
             <label for="theme-select">Tema:</label>
@@ -49,19 +51,23 @@
             </select>
         </section>
         
-        <!-- Adicione o botão "Aplicar Configurações" aqui -->
-        <button id="apply-button">Aplicar Configurações</button>
-        
-        <button id="reset-button">Restaurar Configurações Padrão</button>
-        
+        <!-- Botões de ação -->
+        <div class="button-group">
+            <button id="apply-button">Aplicar Configurações</button>
+            <button id="reset-button">Restaurar Configurações Padrão</button>
+        </div>
+
+        <!-- Seção de Sobre -->
         <section>
             <h2>Sobre</h2>
-            <p>Esta extensão lê o texto selecionado na sua página atual.</p>
+            <p>Esta extensão lê o texto selecionado na página atual e utiliza as configurações ajustadas para personalizar a experiência.</p>
         </section>
     </div>
 
     <footer>
         <p>Copyright 2022 © - Zer0</p>
     </footer>
+
+    <script src="options.js"></script>
 </body>
 </html>

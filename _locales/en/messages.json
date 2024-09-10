@@ -1,0 +1,17 @@
+{
+  "settingsSaved": {
+      "message": "Settings applied successfully!"
+  },
+  "title": {
+      "message": "Settings"
+  },
+  "subtitle": {
+      "message": "Customize your settings here"
+  },
+  "saveButton": {
+      "message": "Save"
+  },
+  "cancelButton": {
+      "message": "Cancel"
+  }
+}

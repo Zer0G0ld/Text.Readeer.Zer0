@@ -23,24 +23,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         }
                         speechSynthesis.speak(utterance);
                         console.log("Começando a falar com as configurações selecionadas.");
+                        sendResponse({ status: "success" });
                     }).catch((error) => {
                         console.error('Erro ao carregar vozes:', error);
                         speechSynthesis.speak(utterance);
+                        sendResponse({ status: "success" });
                     });
                 } else {
                     speechSynthesis.speak(utterance);
+                    sendResponse({ status: "success" });
                 }
             });
         } else {
             console.log("Nenhum texto selecionado.");
+            sendResponse({ status: "error", message: 'Nenhum texto selecionado' });
         }
+
+        // Retorne `true` para indicar que a resposta será enviada assíncronamente
+        return true;
     } else if (message.action === "stop") {
         speechSynthesis.cancel();
         console.log("Fala interrompida.");
+        sendResponse({ status: 'stopped' });
+        // Retorne `true` para indicar que a resposta será enviada assíncronamente
+        return true;
     }
-
-    // Para garantir que sempre há uma resposta, mesmo que não seja necessário
-    sendResponse({ status: "success" });
 });
 
 function loadVoicesAsync() {

@@ -16,6 +16,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    console.log('Menu de contexto clicado:', info, tab);
+    if (info.menuItemId === "readText") {
+        chrome.tabs.sendMessage(tab.id, { action: "read" }, (response) => {
+            if (chrome.runtime.lastError) {
+                console.error(`Erro ao enviar mensagem: ${chrome.runtime.lastError}`);
+            } else {
+                console.log('Resposta recebida:', response);
+            }
+        });
+    }
+});
+
+
 chrome.runtime.onInstalled.addListener(() => {
     console.log('Extensão instalada.');
     chrome.contextMenus.create({
