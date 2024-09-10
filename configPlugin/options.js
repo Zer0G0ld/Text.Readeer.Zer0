@@ -1,38 +1,71 @@
-// Carregar configurações ao abrir a página de opções
+let cachedSettings = {};
+
+// Carregar configurações no início e armazenar em cache
 document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.sync.get(['lang', 'rate', 'volume', 'voice', 'theme'], (items) => {
-        if (items.lang) document.getElementById('lang-select').value = items.lang;
-        if (items.rate) document.getElementById('rate-slider').value = items.rate;
-        if (items.volume) document.getElementById('volume-slider').value = items.volume;
-        if (items.voice) document.getElementById('voice-select').value = items.voice;
-        if (items.theme) document.getElementById('theme-select').value = items.theme;
+        cachedSettings = items;
+        document.getElementById('lang-select').value = items.lang || 'pt-BR';
+        document.getElementById('rate-slider').value = items.rate || 1;
+        document.getElementById('volume-slider').value = items.volume || 1;
+        document.getElementById('voice-select').value = items.voice || '';
+        document.getElementById('theme-select').value = items.theme || 'light';
+
+        document.getElementById('rate-value').textContent = items.rate || 1;
+        document.getElementById('volume-value').textContent = items.volume || 1;
+    });
+
+    // Carregar vozes dinamicamente
+    loadVoicesAsync().then((voices) => {
+        const voiceSelect = document.getElementById('voice-select');
+        voiceSelect.innerHTML = ''; // Limpar qualquer valor anterior
+
+        voices.forEach((voice) => {
+            const option = document.createElement('option');
+            option.value = voice.name;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            voiceSelect.appendChild(option);
+        });
+
+        // Selecionar a voz salva
+        chrome.storage.sync.get(['voice'], (items) => {
+            if (items.voice) voiceSelect.value = items.voice;
+        });
+    }).catch((error) => {
+        console.error('Erro ao carregar vozes:', error);
     });
 });
 
-// Salvar configurações quando o usuário fizer uma alteração
-document.getElementById('lang-select').addEventListener('change', (e) => {
-    chrome.storage.sync.set({ lang: e.target.value });
+// Salvar configurações quando houver alterações
+document.querySelectorAll('input, select').forEach((element) => {
+    element.addEventListener('change', (e) => {
+        cachedSettings[e.target.id.split('-')[0]] = e.target.value;
+        chrome.storage.sync.set(cachedSettings);
+    });
 });
 
-document.getElementById('rate-slider').addEventListener('input', (e) => {
-    document.getElementById('rate-value').textContent = e.target.value;
-    chrome.storage.sync.set({ rate: e.target.value });
-});
+// Carregar vozes de forma assíncrona
+function loadVoicesAsync() {
+    return new Promise((resolve, reject) => {
+        let voices = speechSynthesis.getVoices();
+        if (voices.length !== 0) {
+            resolve(voices);
+        } else {
+            // O evento de "voiceschanged" garante que as vozes sejam carregadas mesmo que estejam atrasadas
+            speechSynthesis.onvoiceschanged = () => {
+                voices = speechSynthesis.getVoices();
+                if (voices.length !== 0) {
+                    resolve(voices);
+                } else {
+                    reject('Nenhuma voz disponível.');
+                }
+            };
+        }
+    });
+}
 
-document.getElementById('volume-slider').addEventListener('input', (e) => {
-    document.getElementById('volume-value').textContent = e.target.value;
-    chrome.storage.sync.set({ volume: e.target.value });
-});
-
-document.getElementById('voice-select').addEventListener('change', (e) => {
-    chrome.storage.sync.set({ voice: e.target.value });
-});
-
-document.getElementById('theme-select').addEventListener('change', (e) => {
-    chrome.storage.sync.set({ theme: e.target.value });
-});
-
+// Resetar as configurações para os padrões
 document.getElementById('reset-button').addEventListener('click', () => {
-    chrome.storage.sync.clear();
-    location.reload();
+    chrome.storage.sync.clear(() => {
+        location.reload();
+    });
 });
