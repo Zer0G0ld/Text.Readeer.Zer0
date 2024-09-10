@@ -1,4 +1,5 @@
 console.log("Content Script está rodando.");
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "read") {
         let selectedText = window.getSelection().toString();
@@ -10,15 +11,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 utterance.volume = parseFloat(items.volume) || 1; // Usar o volume salvo
                 
                 if (items.voice) {
-                    const voices = speechSynthesis.getVoices();
-                    const selectedVoice = voices.find(voice => voice.name === items.voice);
-                    if (selectedVoice) {
-                        utterance.voice = selectedVoice; // Usar a voz selecionada nas configurações
-                    }
+                    loadVoicesAsync().then((voices) => {
+                        const selectedVoice = voices.find(voice => voice.name === items.voice);
+                        if (selectedVoice) {
+                            utterance.voice = selectedVoice; // Usar a voz selecionada nas configurações
+                        }
+                        speechSynthesis.speak(utterance);
+                        console.log("Começando a falar com as configurações selecionadas.");
+                    }).catch((error) => {
+                        console.error('Erro ao carregar vozes:', error);
+                        speechSynthesis.speak(utterance); // Falar com voz padrão se houver erro
+                    });
+                } else {
+                    speechSynthesis.speak(utterance); // Falar com voz padrão se não houver voz selecionada
                 }
-
-                speechSynthesis.speak(utterance);
-                console.log("Começando a falar com as configurações selecionadas.");
             });
         } else {
             console.log("Nenhum texto selecionado.");
@@ -29,6 +35,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+// Carregar vozes de forma assíncrona
 function loadVoicesAsync() {
     return new Promise((resolve, reject) => {
         let voices = speechSynthesis.getVoices();

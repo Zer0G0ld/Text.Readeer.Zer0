@@ -10,8 +10,8 @@
 <body>
     <h1>Configurações</h1>
     <p>Aqui você pode configurar as opções da extensão.</p>
-    <!-- Adicione os campos de configuração que você quiser -->
-     <!-- Idioma de leitura -->
+    
+    <!-- Idioma de leitura -->
     <label for="lang-select">Idioma:</label>
     <select id="lang-select">
         <option value="pt-BR">Português (Brasil)</option>
@@ -19,6 +19,7 @@
         <option value="es-ES">Espanhol (Espanha)</option>
         <!-- Adicione outros idiomas conforme necessário -->
     </select>
+    
     <!-- Velocidade de fala -->
     <label for="rate-slider">Velocidade:</label>
     <input type="range" id="rate-slider" min="0.1" max="2" step="0.1" value="1">
@@ -34,6 +35,7 @@
     <select id="voice-select">
         <!-- As vozes podem ser preenchidas dinamicamente usando JavaScript -->
     </select>
+    
     <!-- Botão para Restaurar Configurações Padrão -->
     <button id="reset-button">Restaurar Configurações Padrão</button>
     
@@ -49,5 +51,7 @@
         <p>Esta extensão lê o texto selecionado na sua página atual.</p>
     </section>
     
+    <!-- Adicionar a referência ao seu JavaScript -->
+    <script src="options.js"></script>
 </body>
 </html>
