@@ -1,5 +1,5 @@
 # Text.Readeer.Zer0
-Text.Readeer.Zer0 é uma extensão para o google Chrome que lê em  voz alta o texto selecionado na página atual. Ideal para quem deseja escutar o conteúdo em vez de lê-lo, a extensão oferece opções de configuração para personalizar experiência de leitura.
+Text.Readeer.Zero é uma extensão para o google Chrome que lê o texto selecionado em voz alta.
 
 ## Funcionalidades
 - Leitura em voz alta do texto selecionado na página.
