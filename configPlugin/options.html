@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/icon.png" type="image/x-icon">
+    <title>Configurações</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <h1>Configurações</h1>
+    <p>Aqui você pode configurar as opções da extensão.</p>
+    <!-- Adicione os campos de configuração que você quiser -->
+     <!-- Idioma de leitura -->
+    <label for="lang-select">Idioma:</label>
+    <select id="lang-select">
+        <option value="pt-BR">Português (Brasil)</option>
+        <option value="en-US">Inglês (EUA)</option>
+        <option value="es-ES">Espanhol (Espanha)</option>
+        <!-- Adicione outros idiomas conforme necessário -->
+    </select>
+    <!-- Velocidade de fala -->
+    <label for="rate-slider">Velocidade:</label>
+    <input type="range" id="rate-slider" min="0.1" max="2" step="0.1" value="1">
+    <span id="rate-value">1</span>
+
+    <!-- Volume da Fala -->
+    <label for="volume-slider">Volume:</label>
+    <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
+    <span id="volume-value">1</span>
+
+    <!-- Escolha da Voz -->
+    <label for="voice-select">Voz:</label>
+    <select id="voice-select">
+        <!-- As vozes podem ser preenchidas dinamicamente usando JavaScript -->
+    </select>
+    <!-- Botão para Restaurar Configurações Padrão -->
+    <button id="reset-button">Restaurar Configurações Padrão</button>
+    
+    <!-- Estilo e tema -->
+    <label for="theme-select">Tema:</label>
+    <select id="theme-select">
+        <option value="light">Claro</option>
+        <option value="dark">Escuro</option>
+    </select>
+
+    <section>
+        <h2>Sobre</h2>
+        <p>Esta extensão lê o texto selecionado na sua página atual.</p>
+    </section>
+    
+</body>
+</html>
