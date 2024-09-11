@@ -1,3 +1,214 @@
+:root {
+    /* Cores do modo claro */
+    --color-light-bg: #f4f4f4; /* Fundo claro */
+    --color-light-text: #333; /* Texto escuro no modo claro */
+    --color-light-container-bg: #fff; /* Container claro */
+    --color-primary: #4CAF50; /* Verde principal */
+    --color-primary-hover: #45a049; /* Verde escuro para hover */
+    --color-light-gray: #ddd; /* Cinza claro */
+    --color-white: #fff; /* Branco */
+
+    /* Cores do modo escuro (versões escuras das cores claras) */
+    --color-dark-bg: #1a1a1a; /* Fundo mais escuro */
+    --color-dark-text: #e0e0e0; /* Texto mais claro no modo escuro */
+    --color-dark-container-bg: #2a2a2a; /* Container escuro */
+    --color-dark-primary: #2e7d32; /* Verde escuro como equivalente do verde principal */
+    --color-dark-primary-hover: #256c28; /* Verde ainda mais escuro para hover no modo escuro */
+    --color-dark-gray: #444; /* Cinza médio para bordas ou contornos */
+    --color-black: #000; /* Preto */
+}
+
+/* Estilos globais */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: var(--color-light-bg);
+    color: var(--color-light-text);
+    transition: background-color 0.3s, color 0.3s; /* Suave transição entre temas */
+}
+
+/* Estilos para container */
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Títulos */
+h1 {
+    font-size: 24px;
+    color: var(--color-light-text);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 10px;
+}
+
+/* Botões */
+button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* Tema Claro (light) */
+body.light {
+    background-color: var(--color-light-bg);
+    color: var(--color-light-text);
+}
+
+.container.light {
+    background-color: var(--color-light-container-bg);
+}
+
+button.light {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+button.light:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* Tema Escuro (dark) */
+body.dark {
+    background-color: var(--color-dark-bg);
+    color: var(--color-dark-text);
+}
+
+body.dark h1 {
+    color: var(--color-dark-text);
+}
+
+.container.dark {
+    background-color: var(--color-dark-bg);
+}
+
+button.dark {
+    background-color: var(--color-dark-primary);
+    color: var(--color-white);
+}
+
+button.dark:hover {
+    background-color: var(--color-dark-primary-hover);
+}
+
+/* Tópico 'Sobre' */
+section h2 {
+    margin-top: 30px;
+    font-size: 18px;
+    color: var(--color-primary);
+}
+
+/* Formulários */
+.form-container {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--color-light-gray); /* Mantém o sombreamento leve */
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease; /* Mantém a transição */
+}
+
+/* Tema Escuro */
+body.dark .form-container {
+    box-shadow: 0 4px 8px var(--color-dark-gray); /* Alteração do sombreamento para o modo escuro */
+}
+
+
+/* Labels */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: inherit; /* Herdar cor conforme o tema */
+}
+
+/* Campos de entrada no modo claro */
+input[type="text"],
+input[type="number"],
+input[type="range"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-light-gray);
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    font-size: 16px;
+    background-color: var(--color-white);
+    color: var(--color-light-text);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="range"] {
+    margin-top: 10px;
+}
+
+/* Campos de entrada no modo escuro */
+body.dark input[type="text"],
+body.dark input[type="number"],
+body.dark input[type="range"],
+body.dark select,
+body.dark textarea {
+    background-color: var(--color-dark-container-bg);
+    color: var(--color-dark-text);
+    border: 1px solid var(--color-dark-gray);
+}
+
+/* Específico para input[type="range"] no modo escuro */
+body.dark input[type="range"] {
+    background-color: var(--color-dark-container-bg);
+}
+
+
+/* Exibir valores ao lado dos sliders */
+span {
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: var(--color-white);
+    border-top: 1px solid var(--color-light-gray);
+    padding: 10px 20px;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--color-dark-gray);
+}
+
+/* Footer no modo escuro */
+body.dark footer {
+    background-color: var(--color-dark-bg);
+    border-top: 1px solid var(--color-dark-gray);
+    color: var(--color-dark-text);
+}
+
+/* Notificação */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px var(--color-dark-gray);
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+/* Responsividade */
 @media (max-width: 600px) {
     .container {
         padding: 10px;
@@ -11,163 +222,4 @@
     input[type="range"] {
         width: 100%;
     }
-}
-
-/* Estilo Global */
-body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f4f4f4;
-    color: #333;
-    transition: background-color 0.3s, color 0.3s; /* Suave transição entre temas */
-}
-
-.container {
-    max-width: 800px;
-    margin: auto;
-}
-
-/* Tema Claro (light) */
-body.light {
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-
-.container.light {
-    background-color: #f4f4f4;
-}
-
-
-/* Tema Escuro (dark) */
-body.dark {
-    background-color: #333;
-    color: #f4f4f4;
-}
-
-.container.dark {
-    background-color: #444;
-}
-
-button.light {
-    background-color: #4CAF50;
-    color: white;
-}
-
-button.dark {
-    background-color: #666;
-    color: white;
-}
-
-button.light:hover {
-    background-color: #45a049;
-}
-
-button.dark:hover {
-    background-color: #555;
-}
-
-/* Título */
-h1 {
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #4CAF50;
-    padding-bottom: 10px;
-}
-
-/* Formulários */
-.form-container {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: background-color 0.3s ease; /* Transição suave entre temas */
-}
-
-.form-container.dark {
-    background-color: #444;
-}
-
-/* Labels */
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: inherit; /* Herdar cor conforme o tema */
-}
-
-/* Campos de entrada */
-input[type="text"],
-input[type="number"],
-input[type="range"],
-select,
-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
-input[type="range"] {
-    margin-top: 10px;
-}
-
-/* Exibir valores ao lado dos sliders */
-span {
-    font-size: 16px;
-    font-weight: bold;
-    margin-left: 10px;
-}
-
-/* Botões */
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* Tópico 'Sobre' */
-section h2 {
-    margin-top: 30px;
-    font-size: 18px;
-    color: #4CAF50;
-}
-
-/* Footer */
-footer {
-    background-color: #fff;
-    border-top: 1px solid #ddd;
-    padding: 10px 20px;
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-}
-
-/* Notificação */
-.notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    transition: opacity 0.3s ease; /* Suave animação de entrada e saída */
 }

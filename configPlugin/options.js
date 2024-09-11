@@ -171,19 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Carregar vozes de forma assíncrona
-function loadVoicesAsync() {
+async function loadVoicesAsync() {
     return new Promise((resolve, reject) => {
         let voices = speechSynthesis.getVoices();
-        if (voices.length !== 0) {
+        if (voices.length > 0) {
             resolve(voices);
         } else {
             speechSynthesis.onvoiceschanged = () => {
                 voices = speechSynthesis.getVoices();
-                if (voices.length !== 0) {
-                    resolve(voices);
-                } else {
-                    reject('Nenhuma voz disponível.');
-                }
+                resolve(voices);
             };
         }
     });
