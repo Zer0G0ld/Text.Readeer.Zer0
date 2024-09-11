@@ -1,3 +1,4 @@
+// Ouvinte para mensagens recebidas
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Mensagem recebida no background:', JSON.stringify(message));
     if (message.action === "read") {
@@ -16,6 +17,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+// Ouvinte para cliques no menu de contexto
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     console.log('Menu de contexto clicado:', info, tab);
     if (info.menuItemId === "readText") {
@@ -29,7 +31,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     }
 });
 
-
+// Ouvinte para instalação da extensão
 chrome.runtime.onInstalled.addListener(() => {
     console.log('Extensão instalada.');
     chrome.contextMenus.create({
@@ -37,17 +39,4 @@ chrome.runtime.onInstalled.addListener(() => {
         title: "Ler Texto Selecionado",
         contexts: ["selection"]
     });
-});
-
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-    console.log('Menu de contexto clicado:', JSON.stringify(info), JSON.stringify(tab));
-    if (info.menuItemId === "readText") {
-        chrome.tabs.sendMessage(tab.id, { action: "read" }, (response) => {
-            if (chrome.runtime.lastError) {
-                console.error(`Erro ao enviar mensagem: ${JSON.stringify(chrome.runtime.lastError)}`);
-            } else {
-                console.log('Resposta recebida:', JSON.stringify(response));
-            }
-        });
-    }
 });
