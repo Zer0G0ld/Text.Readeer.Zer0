@@ -1,10 +1,15 @@
 {
     "manifest_version": 3,
     "name": "Text Reader Zer0",
-    "version": "1.0",
-    "description": "Lê o texto selecionado",
+    "version": "1.2",
+    "description": "Uma extensão para ler textos selecionados em voz alta.",
     "default_locale": "pt",
-    "permissions": ["activeTab", "tabs", "storage", "contextMenus"],
+    "permissions": [
+        "activeTab",
+        "tabs", 
+        "storage",
+        "contextMenus"
+    ],
     "background": {
         "service_worker": "background.js"
     },
@@ -12,11 +17,28 @@
         "default_popup": "popup.html",
         "default_icon": "/img/icon.png"
     },
+    "icons": {
+        "16": "img/icon.png",
+        "48": "img/icon.png",
+        "128": "img/icon.png"
+    },
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
-            "js": ["contentScript.js"]
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "contentScript.js"
+            ]
         }
     ],
-    "options_page": "configPlugin/options.html"
+    "options_page": "configPlugin/options.html",
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Y"
+            },
+            "description": "Ativar popup"
+        }
+    }
 }

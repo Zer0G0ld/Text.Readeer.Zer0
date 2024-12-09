@@ -1,54 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Carregar configurações salvas
+    // Inicializar configurações ao carregar o popup
+    loadSettings();
+
+    // Configurar eventos dos botões
+    setupButtonListeners();
+});
+
+// Função para carregar configurações salvas
+function loadSettings() {
     chrome.storage.sync.get(['speechRate', 'volume'], (items) => {
-        const speechRate = items.speechRate || 1;
-        const volume = items.volume || 1;
+        const speechRate = items.speechRate || 1; // Taxa de fala padrão
+        const volume = items.volume || 1;       // Volume padrão
 
-        // Aplicar configurações no popup
-        document.getElementById('read').dataset.speechRate = speechRate;
-        document.getElementById('read').dataset.volume = volume;
-        
-        // Exemplo de como aplicar essas configurações ao seu código de leitura
-        // const reader = new SpeechSynthesisUtterance();
-        // reader.rate = speechRate;
-        // reader.volume = volume;
+        // Atualizar dataset do botão "read"
+        const readButton = document.getElementById('read');
+        readButton.dataset.speechRate = speechRate;
+        readButton.dataset.volume = volume;
+
+        console.log(`Configurações carregadas: Taxa - ${speechRate}, Volume - ${volume}`);
     });
-});
+}
 
-document.getElementById('read').addEventListener('click', () => {
+// Configurar listeners para os botões do popup
+function setupButtonListeners() {
+    document.getElementById('read').addEventListener('click', () => {
+        sendMessageToActiveTab({ action: "read" }, "Leitura iniciada.");
+    });
+
+    document.getElementById('stop').addEventListener('click', () => {
+        sendMessageToActiveTab({ action: "stop" }, "Leitura interrompida.");
+    });
+
+    document.getElementById('config-button').addEventListener('click', () => {
+        chrome.runtime.openOptionsPage();
+    });
+}
+
+// Função genérica para enviar mensagens para a aba ativa
+function sendMessageToActiveTab(message, successMessage) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        console.log('Aba ativa encontrada no popup:', tabs);
-        if (tabs.length > 0 && tabs[0].status === 'complete' && tabs[0].id) {
-            chrome.tabs.sendMessage(tabs[0].id, { action: "read" }, (response) => {
+        if (tabs.length > 0 && tabs[0].id) {
+            chrome.tabs.sendMessage(tabs[0].id, message, (response) => {
                 if (chrome.runtime.lastError) {
-                    console.error(`Erro ao enviar mensagem: ${chrome.runtime.lastError}`);
+                    console.error(`Erro ao enviar mensagem: ${chrome.runtime.lastError.message}`);
+                } else if (response) {
+                    console.log(`Resposta recebida:`, response);
                 } else {
-                    console.log('Resposta recebida:', response);
+                    console.warn("Nenhuma resposta recebida do content script.");
                 }
             });
+            console.log(successMessage);
         } else {
-            console.error("Aba não válida, carregando ou inexistente.");
+            console.error("Nenhuma aba ativa válida encontrada.");
         }
     });
-});
-
-document.getElementById('stop').addEventListener('click', () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        console.log('Aba ativa encontrada no popup para parar:', tabs);
-        if (tabs.length > 0 && tabs[0].status === 'complete' && tabs[0].id) {
-            chrome.tabs.sendMessage(tabs[0].id, { action: "stop" }, (response) => {
-                if (chrome.runtime.lastError) {
-                    console.error(`Erro ao enviar mensagem: ${chrome.runtime.lastError}`);
-                } else {
-                    console.log('Resposta recebida:', response);
-                }
-            });
-        } else {
-            console.error("Aba não válida, carregando ou inexistente.");
-        }
-    });
-});
-
-document.getElementById('config-button').addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
-});
+}

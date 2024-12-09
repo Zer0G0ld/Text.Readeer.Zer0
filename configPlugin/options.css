@@ -24,7 +24,7 @@ body {
     padding: 20px;
     background-color: var(--color-light-bg);
     color: var(--color-light-text);
-    transition: background-color 0.3s, color 0.3s; /* Suave transição entre temas */
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Estilos para container */
@@ -51,11 +51,16 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
     background-color: var(--color-primary-hover);
+    transform: translateY(-2px); /* Efeito sutil ao passar o mouse */
+}
+
+button:focus {
+    outline: 2px solid var(--color-primary);
 }
 
 /* Tema Claro (light) */
@@ -110,27 +115,26 @@ section h2 {
 /* Formulários */
 .form-container {
     border-radius: 8px;
-    box-shadow: 0 4px 8px var(--color-light-gray); /* Mantém o sombreamento leve */
+    box-shadow: 0 4px 8px var(--color-light-gray);
     padding: 20px;
     margin-bottom: 20px;
-    transition: box-shadow 0.3s ease; /* Mantém a transição */
+    transition: box-shadow 0.3s ease;
 }
 
 /* Tema Escuro */
 body.dark .form-container {
-    box-shadow: 0 4px 8px var(--color-dark-gray); /* Alteração do sombreamento para o modo escuro */
+    box-shadow: 0 4px 8px var(--color-dark-gray);
 }
-
 
 /* Labels */
 label {
     display: block;
     font-weight: bold;
     margin-bottom: 8px;
-    color: inherit; /* Herdar cor conforme o tema */
+    color: inherit;
 }
 
-/* Campos de entrada no modo claro */
+/* Campos de entrada */
 input[type="text"],
 input[type="number"],
 input[type="range"],
@@ -145,7 +149,7 @@ textarea {
     font-size: 16px;
     background-color: var(--color-white);
     color: var(--color-light-text);
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 input[type="range"] {
@@ -167,7 +171,6 @@ body.dark textarea {
 body.dark input[type="range"] {
     background-color: var(--color-dark-container-bg);
 }
-
 
 /* Exibir valores ao lado dos sliders */
 span {
@@ -205,7 +208,12 @@ body.dark footer {
     border-radius: 5px;
     box-shadow: 0 2px 5px var(--color-dark-gray);
     z-index: 1000;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification.hide {
+    opacity: 0;
+    transform: translateY(10px);
 }
 
 /* Responsividade */

@@ -1,6 +1,6 @@
 let cachedSettings = {};
 
-// Função para atualizar os valores exibidos
+// Função para atualizar os valores exibidos dos sliders
 function updateDisplayValues() {
     const rateSlider = document.getElementById('rate-slider');
     const volumeSlider = document.getElementById('volume-slider');
@@ -12,44 +12,69 @@ function updateDisplayValues() {
     }
 }
 
-// Função para carregar configurações
-function loadSettings() {
-    chrome.storage.sync.get(['lang', 'rate', 'volume', 'voice', 'theme'], (items) => {
+// Função para carregar configurações do armazenamento
+async function loadSettings() {
+    try {
+        const items = await getSettingsFromStorage();
         cachedSettings = items;
-        const langSelect = document.getElementById('lang-select');
-        const rateSlider = document.getElementById('rate-slider');
-        const volumeSlider = document.getElementById('volume-slider');
-        const voiceSelect = document.getElementById('voice-select');
-        const themeSelect = document.getElementById('theme-select');
+        const { lang, rate, volume, voice, theme } = items;
 
-        if (langSelect) langSelect.value = items.lang || 'pt-BR';
-        if (rateSlider) rateSlider.value = items.rate || 1;
-        if (volumeSlider) volumeSlider.value = items.volume || 1;
-        if (voiceSelect) voiceSelect.value = items.voice || '';
-        if (themeSelect) themeSelect.value = items.theme || 'light';
+        setElementValue('lang-select', lang || 'pt-BR');
+        setElementValue('rate-slider', rate || 1);
+        setElementValue('volume-slider', volume || 1);
+        setElementValue('voice-select', voice || '');
+        setElementValue('theme-select', theme || 'light');
 
         updateDisplayValues();
-        applyTheme(items.theme || 'light'); // Aplicar o tema carregado
+        applyTheme(theme || 'light');
+        
+        await loadVoices();
+    } catch (error) {
+        console.error('Erro ao carregar configurações:', error);
+    }
+}
 
-        // Carregar vozes dinamicamente
-        loadVoicesAsync().then((voices) => {
-            if (voiceSelect) {
-                voiceSelect.innerHTML = ''; // Limpar qualquer valor anterior
-
-                voices.forEach((voice) => {
-                    const option = document.createElement('option');
-                    option.value = voice.name;
-                    option.textContent = `${voice.name} (${voice.lang})`;
-                    voiceSelect.appendChild(option);
-                });
-
-                // Selecionar a voz salva
-                if (items.voice) voiceSelect.value = items.voice;
+// Função para obter configurações do armazenamento
+function getSettingsFromStorage() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get(['lang', 'rate', 'volume', 'voice', 'theme'], (items) => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                resolve(items);
             }
-        }).catch((error) => {
-            console.error('Erro ao carregar vozes:', error);
         });
     });
+}
+
+// Função para definir o valor de um elemento
+function setElementValue(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.value = value;
+}
+
+// Função para carregar as vozes de forma assíncrona
+async function loadVoices() {
+    try {
+        const voices = await loadVoicesAsync();
+        const voiceSelect = document.getElementById('voice-select');
+        if (voiceSelect) {
+            voiceSelect.innerHTML = ''; // Limpar opções anteriores
+            voices.forEach((voice) => {
+                const option = document.createElement('option');
+                option.value = voice.name;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                voiceSelect.appendChild(option);
+            });
+
+            // Selecionar a voz salva
+            if (cachedSettings.voice) {
+                voiceSelect.value = cachedSettings.voice;
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao carregar vozes:', error);
+    }
 }
 
 // Função para exibir notificação suave
@@ -59,35 +84,39 @@ function showNotification(messageKey) {
     notification.textContent = message;
     notification.classList.add('notification');
     document.body.appendChild(notification);
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
+    setTimeout(() => notification.remove(), 3000);
 }
 
-// Função para salvar configurações
-function saveSettings() {
-    const lang = document.getElementById('lang-select')?.value;
-    const rate = document.getElementById('rate-slider')?.value;
-    const volume = document.getElementById('volume-slider')?.value;
-    const voice = document.getElementById('voice-select')?.value;
-    const theme = document.getElementById('theme-select')?.value;
+// Função para salvar as configurações no armazenamento
+async function saveSettings() {
+    const settings = {
+        lang: document.getElementById('lang-select')?.value,
+        rate: document.getElementById('rate-slider')?.value,
+        volume: document.getElementById('volume-slider')?.value,
+        voice: document.getElementById('voice-select')?.value,
+        theme: document.getElementById('theme-select')?.value
+    };
 
-    cachedSettings = { lang, rate, volume, voice, theme };
-    chrome.storage.sync.set(cachedSettings, () => {
-        console.log('Configurações aplicadas e salvas:', cachedSettings);
-        if (theme) {
-            applyTheme(theme); // Aplicar o tema imediatamente
-        }
-        showNotification('settingsSaved'); // Usar chave de mensagem para buscar tradução
-    });
+    try {
+        await chrome.storage.sync.set(settings);
+        cachedSettings = settings; // Atualizar o cache
+        console.log('Configurações aplicadas e salvas:', settings);
+        if (settings.theme) applyTheme(settings.theme); // Aplicar tema imediatamente
+        showNotification('settingsSaved');
+    } catch (error) {
+        console.error('Erro ao salvar configurações:', error);
+    }
 }
 
 // Função para resetar as configurações
-function resetSettings() {
-    chrome.storage.sync.clear(() => {
+async function resetSettings() {
+    try {
+        await chrome.storage.sync.clear();
         console.log('Configurações resetadas');
         location.reload();
-    });
+    } catch (error) {
+        console.error('Erro ao resetar configurações:', error);
+    }
 }
 
 // Função para aplicar o tema selecionado
@@ -98,20 +127,16 @@ function applyTheme(theme) {
 
     // Remover classes antigas
     body.classList.remove('light', 'dark');
-    if (container) {
-        container.classList.remove('light', 'dark');
-    }
+    container?.classList.remove('light', 'dark');
     buttons.forEach(button => button.classList.remove('light', 'dark'));
 
     // Adicionar a classe do tema selecionado
     body.classList.add(theme);
-    if (container) {
-        container.classList.add(theme);
-    }
+    container?.classList.add(theme);
     buttons.forEach(button => button.classList.add(theme));
 }
 
-// Função para aplicar as traduções
+// Função para aplicar traduções
 function applyTranslations(lang) {
     const elementsToTranslate = {
         'title': document.querySelector('#title'),
@@ -128,12 +153,27 @@ function applyTranslations(lang) {
     }
 }
 
+// Função para carregar as vozes de forma assíncrona
+function loadVoicesAsync() {
+    return new Promise((resolve, reject) => {
+        const voices = speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            resolve(voices);
+        } else {
+            speechSynthesis.onvoiceschanged = () => {
+                const voices = speechSynthesis.getVoices();
+                resolve(voices);
+            };
+        }
+    });
+}
+
 // Carregar configurações e aplicar traduções no início
 document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
 
     chrome.storage.sync.get(['lang'], (items) => {
-        const currentLang = items.lang || 'pt'; // Padrão para 'pt-BR' se nenhum idioma estiver selecionado
+        const currentLang = items.lang || 'pt';
         applyTranslations(currentLang);
     });
 
@@ -169,18 +209,3 @@ document.addEventListener('DOMContentLoaded', () => {
         resetButton.addEventListener('click', resetSettings);
     }
 });
-
-// Carregar vozes de forma assíncrona
-async function loadVoicesAsync() {
-    return new Promise((resolve, reject) => {
-        let voices = speechSynthesis.getVoices();
-        if (voices.length > 0) {
-            resolve(voices);
-        } else {
-            speechSynthesis.onvoiceschanged = () => {
-                voices = speechSynthesis.getVoices();
-                resolve(voices);
-            };
-        }
-    });
-}

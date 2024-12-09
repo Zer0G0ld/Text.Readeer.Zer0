@@ -8,17 +8,25 @@
     <title>Text Reader Zer0</title>
 </head>
 <body>
-    <div class="all">
+    <header>
         <h1>Text Reader Zer0</h1>
-        <button id="read">Ler Texto</button>
-        <button id="stop">Parar</button>
-
-        <!-- Botão de configurações com ícone de engrenagem -->
+    </header>
+    <main>
+        <button id="read" aria-label="Ler Texto">
+            <i class="fa-solid fa-play"></i> Ler Texto
+        </button>
+        <button id="stop" aria-label="Parar Leitura">
+            <i class="fa-solid fa-stop"></i> Parar
+        </button>
         <div id="config-button" class="config">
-            <button><i class="fa-solid fa-gear"></i> Configurações</button>
+            <button aria-label="Configurações">
+                <i class="fa-solid fa-gear"></i> Configurações
+            </button>
         </div>
-        
-        <script src="popup.js"></script>
-    </div>
+    </main>
+    <footer>
+        <small>© 2024 Text Reader Zer0</small>
+    </footer>
+    <script src="popup.js"></script>
 </body>
 </html>
